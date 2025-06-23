@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, Mail, Phone, MapPin, Download, Github, Linkedin, Facebook, Menu, X, Loader2, Check, Send } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import ProjectFilter from './components/ProjectFilter.tsx';
 import ProjectGrid from './components/ProjectGrid.tsx';
 import Footer from './components/Footer.tsx';
@@ -639,13 +640,13 @@ function App() {
             </form>
             ) : (
               <div 
-                className="text-center py-8"
+                className="text-center py-8 animate-fade-in"
               >
                 <div className="p-4 rounded-full bg-off-white/10 mx-auto w-16 h-16 flex items-center justify-center mb-4">
-                  <Check size={24} className="text-off-white" />
+                  <Check size={24} className="text-off-white animate-scale-in" />
                 </div>
-                <h3 className="text-2xl font-bold text-off-white mb-2">Message Sent!</h3>
-                <p className="text-off-white/70">
+                <h3 className="text-2xl font-bold text-off-white mb-2 animate-fade-in-up">Message Sent!</h3>
+                <p className="text-off-white/70 animate-fade-in-up delay-100">
                   Thank you for your message. I'll get back to you as soon as possible.
                 </p>
               </div>
@@ -676,6 +677,7 @@ function App() {
         setIsMenuOpen={setIsMenuOpen}
         isScrolled={isScrolled}
       />
+      <Analytics />
       {renderPage()}
       <Footer />
     </div>
