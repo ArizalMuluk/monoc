@@ -8,7 +8,7 @@ const Footer = () => (
         <div className="lg:col-span-2">
           <h3 className="text-2xl font-bold text-off-white mb-4">Arizal Firdaus</h3>
           <p className="text-off-white/70 leading-relaxed mb-6 max-w-md">
-            Machine Learning Engineer & AI Specialist. Building intelligent solutions for real-world challenges.
+            Machine Learning Engineer & AI Enthusiast. Building intelligent solutions for real-world challenges.
           </p>
           <div className="flex items-center gap-4">
             <a 
