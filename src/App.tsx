@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Mail, Phone, MapPin, Download, Github, Linkedin, Facebook, X, Loader2, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, Mail, Phone, MapPin, Download, Github, Linkedin, Facebook, Menu, X, Loader2, Check, Send } from 'lucide-react';
 import ProjectFilter from './components/ProjectFilter.tsx';
 import ProjectGrid from './components/ProjectGrid.tsx';
 import Footer from './components/Footer.tsx';
@@ -80,8 +80,6 @@ function App() {
   const [projectFilter, setProjectFilter] = useState('all');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [formState, setFormState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -439,28 +437,32 @@ function App() {
   );
 
   const ContactPage = () => {
+    // --- State Management ---
     const [formData, setFormData] = useState({
       name: '',
       email: '',
-      subject: '',
+      serviceType: '', // Corresponds to 'subject' in ContactSuccess.tsx, but kept as serviceType for relevance
       message: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
+    const [submitted, setSubmitted] = useState(false); // To show success message
     const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    // --- Input Handler ---
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
       setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // --- Submit Handler ---
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setIsSubmitting(true);
-      setError(null);
+      setError(null); // Reset error on new submission
+      setSubmitted(false); // Reset submitted state on new submission
 
       try {
-        const response = await fetch('/api/send-email.js', {
+        const response = await fetch('/api/send-email', { // Ensure this matches your actual API endpoint
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
@@ -468,9 +470,13 @@ function App() {
 
         if (response.ok) {
           setSubmitted(true);
-          setFormData({ name: '', email: '', subject: '', message: '' });
-          setTimeout(() => setSubmitted(false), 5000);
+          setFormData({ name: '', email: '', serviceType: '', message: '' }); // Reset form fields
+          // Reset submitted state after showing success message
+          setTimeout(() => {
+            setSubmitted(false);
+          }, 5000);
         } else {
+          // Try to parse as JSON, but fallback to text if it fails
           let errorMessage = 'Failed to send message. Please try again.';
           try {
             const contentType = response.headers.get("content-type");
@@ -478,16 +484,20 @@ function App() {
               const errorData = await response.json();
               errorMessage = errorData.message || errorMessage;
             } else {
+              // If not JSON, try to get text. This might be an HTML error page.
               const errorText = await response.text();
-              errorMessage = `Server error (${response.status}).`;
+              console.error('Server responded with non-JSON error. Status:', response.status, 'Response:', errorText);
+              errorMessage = `Server error (${response.status}). Check console for details.`;
             }
-          } catch {
-            errorMessage = `Server error (${response.status}).`;
+          } catch (parseError) {
+            console.error('Failed to parse error response. Status:', response.status, 'Error:', parseError);
+            errorMessage = `Server error (${response.status}). Could not parse response.`;
           }
           setError(errorMessage);
         }
-      } catch (err) {
+      } catch (error: any) {
         setError('An unexpected error occurred. Please try again.');
+        console.error('Submission error:', error);
       } finally {
         setIsSubmitting(false);
       }
@@ -505,6 +515,7 @@ function App() {
             Let's discuss how we can bring your vision to life.
           </p>
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="space-y-8">
             <div>
@@ -524,6 +535,7 @@ function App() {
                 </div>
               </div>
             </div>
+
             <div>
               <h3 className="text-xl font-bold text-off-white mb-4">Follow Me</h3>
               <div className="flex items-center gap-6">
@@ -539,90 +551,93 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="bg-dark-gray p-8 rounded-lg">
+
+          <div className="bg-dark-gray p-8">
             {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
-                    Name
-                  </label>
-                  <input 
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
-                    Email
-                  </label>
-                  <input 
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
-                    Subject
-                  </label>
-                  <input 
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors"
-                    placeholder="Project Inquiry"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
-                    Message
-                  </label>
-                  <textarea 
-                    rows={4}
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors resize-none"
-                    placeholder="Tell me about your project..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="group flex items-center gap-3 bg-off-white text-charcoal px-8 py-4 transition-all duration-300 w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 size={18} className="animate-spin" />
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-sm tracking-wide uppercase font-medium">Send Message</span>
-                      <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
-                {error && (
-                  <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
+                  Name
+                </label>
+                <input 
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors"
+                  placeholder="Your name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
+                  Email
+                </label>
+                <input 
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors"
+                  placeholder="your@email.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
+                  Service Type
+                </label>
+                <select 
+                  name="serviceType" 
+                  value={formData.serviceType}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors">
+                  <option value="" className="bg-charcoal">Select a service</option>
+                  <option value="ml-development" className="bg-charcoal">ML Model Development</option>
+                  <option value="nlp" className="bg-charcoal">Natural Language Processing</option>
+                  <option value="computer-vision" className="bg-charcoal">Computer Vision</option>
+                  <option value="consultation" className="bg-charcoal">AI/ML Consultation</option>
+                  <option value="other" className="bg-charcoal">Other Inquiry</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm uppercase tracking-wide text-off-white/60 mb-3">
+                  Message
+                </label>
+                <textarea 
+                  rows={4}
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full bg-transparent border-b border-medium-gray focus:border-off-white outline-none text-off-white py-3 transition-colors resize-none"
+                  placeholder="Tell me about your project..."
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="group flex items-center gap-3 bg-off-white text-charcoal px-8 py-4 transition-all duration-300 w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <div className="flex items-center">
+                    <span className="text-sm tracking-wide uppercase font-medium">Send Message</span>
+                    <Send size={18} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
                 )}
-              </form>
+              </button>
+              {error && (
+                <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+              )}
+            </form>
             ) : (
-              <div className="text-center py-8">
-                <div className="p-4 rounded-full bg-green-500/10 mx-auto w-16 h-16 flex items-center justify-center mb-4">
-                  <Check size={32} className="text-green-500" />
+              <div 
+                className="text-center py-8"
+              >
+                <div className="p-4 rounded-full bg-off-white/10 mx-auto w-16 h-16 flex items-center justify-center mb-4">
+                  <Check size={24} className="text-off-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-off-white mb-2">Message Sent!</h3>
                 <p className="text-off-white/70">
