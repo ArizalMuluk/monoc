@@ -458,25 +458,31 @@ function App() {
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setIsSubmitting(true);
-      setError(null); // Reset error on new submission
-      setSubmitted(false); // Reset submitted state on new submission
+      setError(null);
+      setSubmitted(false);
+
+      // Map serviceType to subject for backend compatibility
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.serviceType, // <-- mapping here
+        message: formData.message,
+      };
 
       try {
-        const response = await fetch('/api/send-email', { // Ensure this matches your actual API endpoint
+        const response = await fetch('/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
 
         if (response.ok) {
           setSubmitted(true);
-          setFormData({ name: '', email: '', serviceType: '', message: '' }); // Reset form fields
-          // Reset submitted state after showing success message
+          setFormData({ name: '', email: '', serviceType: '', message: '' });
           setTimeout(() => {
             setSubmitted(false);
           }, 5000);
         } else {
-          // Try to parse as JSON, but fallback to text if it fails
           let errorMessage = 'Failed to send message. Please try again.';
           try {
             const contentType = response.headers.get("content-type");
@@ -484,7 +490,6 @@ function App() {
               const errorData = await response.json();
               errorMessage = errorData.message || errorMessage;
             } else {
-              // If not JSON, try to get text. This might be an HTML error page.
               const errorText = await response.text();
               console.error('Server responded with non-JSON error. Status:', response.status, 'Response:', errorText);
               errorMessage = `Server error (${response.status}). Check console for details.`;
