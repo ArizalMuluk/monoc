@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Mail, Phone, MapPin, Download, Github, Linkedin, Facebook, Menu, X, Loader2, Check, Send } from 'lucide-react';
+import { ArrowRight, Mail, Phone, MapPin, Download, Github, Linkedin, Instagram, Menu, X, Loader2, Check, Send } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
 import ProjectFilter from './components/ProjectFilter.tsx';
 import ProjectGrid from './components/ProjectGrid.tsx';
@@ -15,6 +15,19 @@ export type Project = {
   description: string;
   tags: string[];
   featured: boolean;
+  challenge: string;
+  process: {
+    step: string;
+    description: string;
+  }[];
+  githubUrl?: string; // Optional GitHub URL
+  demoUrl?: string;   // Optional Demo URL
+  modelUrl?: string;  // Optional Model download URL
+  results: {
+    metric: string;
+    value: string;
+  }[];
+  role?: string; // Optional role in the project
 };
 
 const projects: Project[] = [
@@ -26,7 +39,26 @@ const projects: Project[] = [
     image: "/images/project/aiml_personality.png",
     description: "Personality prediction system using machine learning (Random Forest) to analyze user input.",
     tags: ["Scikit-Learn", "Flask", "Random Forest"],
-    featured: true
+    featured: true,
+    role: "ML Engineer",
+    challenge: "The project aimed to develop a machine learning model that could accurately predict user personality traits based on their input data. The challenge was to create a robust model that could generalize well across different user inputs while maintaining high accuracy.",
+    process: [
+      {
+        step: "1. Data Collection & Preprocessing",
+        description: "Gathered a dataset of user responses and their corresponding personality traits. The data was cleaned, and text features were vectorized for model consumption."
+      },
+      {
+        step: "2. Model Selection & Training",
+        description: "Evaluated several classification algorithms, with Random Forest showing the best preliminary results. The model was trained on the preprocessed data to learn the patterns between inputs and personality types."
+      },
+      {
+        step: "3. API Development & Deployment",
+        description: "A Flask-based REST API was developed to serve the trained model, allowing for easy integration with a user-facing application. The API exposes an endpoint to receive user input and return personality predictions."
+      }
+    ],
+    results: [{ metric: "92.93%", value: "Prediction Accuracy" }, { metric: "535.5 KB", value: "Model Size" }],
+    githubUrl: "https://github.com/ArizalMuluk/personality_behavior",
+    modelUrl: "https://huggingface.co/RijalMuluk/personality_behavior/resolve/main/personality_rf_model.joblib?download=true"
   },
   {
     id: 2,
@@ -35,8 +67,27 @@ const projects: Project[] = [
     year: "2025",
     image: "/images/project/naspad_classifier.png",
     description: "Transfer learning model (ResNet18) to classify Nasi Padang Menu images.",
-    tags: ["ResNet18", "Deep Learning", "PyTorch", "Flask"],
-    featured: true
+    tags: ["PyTorch", "ResNet18", "Deep Learning", "Flask"],
+    featured: true,
+    role: "ML Engineer",
+    challenge: "The main challenge was to build a highly accurate image classification model with a limited dataset of Nasi Padang dishes. This required leveraging transfer learning to adapt a pre-trained model to our specific domain.",
+    process: [
+      {
+        step: "1. Data Augmentation",
+        description: "Applied various data augmentation techniques (rotation, flipping, brightness adjustments) to artificially expand the training dataset and prevent overfitting."
+      },
+      {
+        step: "2. Transfer Learning with ResNet18",
+        description: "Utilized a pre-trained ResNet18 model and fine-tuned its final layers on our Nasi Padang image dataset. This approach significantly accelerated training and improved performance."
+      },
+      {
+        step: "3. Model Serving",
+        description: "The trained PyTorch model was wrapped in a Flask API, creating an endpoint that accepts an image and returns the predicted dish category."
+      }
+    ],
+    results: [{ metric: "89.45%", value: "Classification Accuracy" }, { metric: "42.7 MB", value: "Model Size" }],
+    githubUrl: "https://github.com/ArizalMuluk/naspad_classifier",
+    modelUrl: "https://huggingface.co/RijalMuluk/naspad_classifier/resolve/main/nasipad_classifier.pt?download=true"
   },
   {
     id: 3,
@@ -45,8 +96,27 @@ const projects: Project[] = [
     year: "2025",
     image: "/images/project/aiml.png",
     description: "Machine learning model (Decision Tree) to predict iris species based on flower measurements.",
-    tags: ["Flask", "Decision Tree Classifier", "Scikit-Learn"],
-    featured: true
+    tags: ["Scikit-Learn", "Decision Tree", "Flask"],
+    featured: true,
+    role: "ML Engineer",
+    challenge: "To create a simple yet effective machine learning model for predicting iris species from sepal and petal measurements. The goal was to build a system that is both accurate and easily interpretable.",
+    process: [
+      {
+        step: "1. Exploratory Data Analysis (EDA)",
+        description: "Analyzed the classic Iris dataset to understand the relationships between features and the target variable, visualizing distributions to inform model selection."
+      },
+      {
+        step: "2. Decision Tree Implementation",
+        description: "Chose a Decision Tree Classifier due to its interpretability. The model was trained on the dataset to learn the optimal decision boundaries for classifying the species."
+      },
+      {
+        step: "3. Web Interface",
+        description: "Developed a simple web interface using Flask that allows users to input flower measurements and receive an instant species prediction from the model."
+      }
+    ],
+    results: [{ metric: "96.55%", value: "Model Accuracy" }, { metric: "2.5 KB", value: "Model Size" }],
+    githubUrl: "https://github.com/ArizalMuluk/iris_prediction",
+    modelUrl: "https://huggingface.co/RijalMuluk/iris_DTC_model/resolve/main/iris_decision_tree_model.pkl?download=true"
   },
   {
     id: 4,
@@ -55,8 +125,27 @@ const projects: Project[] = [
     year: "2022",
     image: "/images/project/aiml2.png",
     description: "Chatbot using Groq API for natural language processing, built with Flask.",
-    tags: ["NLP", "Flask", "Groq API"],
-    featured: false
+    tags: ["NLP", "Flask", "Groq API", "LLM"],
+    featured: false,
+    role: "FullStack Developer",
+    challenge: "The objective was to create a responsive and intelligent chatbot assistant for learning purposes. The main challenge was integrating a powerful Large Language Model (LLM) via an API to handle natural language queries effectively.",
+    process: [
+      {
+        step: "1. API Integration",
+        description: "Integrated the Groq API to access its high-speed LLM inference capabilities. This formed the core of the chatbot's language understanding."
+      },
+      {
+        step: "2. Backend Development",
+        description: "Built a backend service using Flask to manage conversation state, handle API requests to Groq, and process the responses."
+      },
+      {
+        step: "3. Frontend Interface",
+        description: "Designed a simple chat interface to allow users to interact with the chatbot, send queries, and view the AI-generated responses."
+      }
+    ],
+    results: [{ metric: "High", value: "Contextual Relevance" }, { metric: "Large", value: "Model (via API)" }],
+    githubUrl: "https://github.com/ArizalMuluk/learning-chatbot",
+    demoUrl: "https://learning-chatbot-iota.vercel.app/"
   },
   {
     id: 5,
@@ -65,8 +154,27 @@ const projects: Project[] = [
     year: "2025",
     image: "/images/project/farhanstaticweb.png",
     description: "ART Theme Static portfolio website showcasing projects and skills.",
-    tags: ["Website", "Portofolio", "ART"],
-    featured: false
+    tags: ["HTML5", "TailwindCSS", "Javascript", "Static Site"],
+    featured: false,
+    role: "Frontend Developer",
+    challenge: "To build a visually appealing, fast, and fully responsive static portfolio website from scratch to showcase personal projects and skills effectively. The design needed to be modern and minimalist.",
+    process: [
+      {
+        step: "1. Design & Prototyping",
+        description: "Created wireframes and mockups to define the layout, color scheme, and typography, focusing on a clean, art-inspired aesthetic."
+      },
+      {
+        step: "2. Component-Based Development",
+        description: "Developed the website using React and TailwindCSS, breaking down the UI into reusable components for maintainability and consistency."
+      },
+      {
+        step: "3. Optimization & Deployment",
+        description: "Optimized the site for performance and deployed it as a static site, ensuring fast load times and a smooth user experience across all devices."
+      }
+    ],
+    results: [],
+    githubUrl: "https://github.com/ArizalMuluk/varhan-web",
+    demoUrl: "https://varhan-web.vercel.app/"
   },
 ];
 
@@ -88,6 +196,11 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Scroll to top whenever the page changes
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   const HomePage = () => (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -106,14 +219,14 @@ function App() {
             <div className="flex items-center justify-center gap-6 pt-8">
               <button 
                 onClick={() => setCurrentPage('work')}
-                className="group flex items-center gap-3 bg-transparent border-2 border-off-white text-off-white px-8 py-4 hover:bg-off-white hover:text-charcoal transition-all duration-300"
+                className="group flex items-center gap-3 bg-off-white border-2 border-off-white text-charcoal px-8 py-4 hover:bg-transparent hover:text-off-white transition-all duration-300"
               >
                 <span className="text-sm tracking-wide uppercase font-medium">View Work</span>
                 <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
               </button>
               <button 
                 onClick={() => setCurrentPage('about')}
-                className="text-sm tracking-wide uppercase font-medium text-off-white/60 hover:text-off-white transition-colors border-b border-transparent hover:border-off-white/60 pb-1"
+                className="text-sm tracking-wide uppercase font-medium text-off-white/60 hover:text-off-white transition-colors border-b border-off-white/60 hover:border-off-white pb-1"
               >
                 About Me
               </button>
@@ -251,10 +364,43 @@ function App() {
                 </div>
                 <div>
                   <span className="uppercase tracking-wide">Role</span>
-                  <div className="text-off-white mt-1">Lead Designer</div>
+                  <div className="text-off-white mt-1">{selectedProject.role || 'N/A'}</div>
                 </div>
               </div>
             </div>
+            
+            {/* Action Buttons */}
+            {(selectedProject.githubUrl || selectedProject.demoUrl || selectedProject.modelUrl) && (
+              <div className="flex items-center justify-center gap-6 pt-8">
+                {selectedProject.githubUrl && (
+                  <a 
+                    href={selectedProject.githubUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 bg-transparent border-2 border-off-white text-off-white px-8 py-4 hover:bg-off-white hover:text-charcoal transition-all duration-300"
+                  >
+                    <Github size={18} />
+                    <span className="text-sm tracking-wide uppercase font-medium">View on GitHub</span>
+                  </a>
+                )}
+                {selectedProject.modelUrl && (
+                  <a href={selectedProject.modelUrl} target="_blank" rel="noopener noreferrer"
+                    className="group flex items-center gap-3 bg-transparent border-2 border-off-white text-off-white px-8 py-4 hover:bg-off-white hover:text-charcoal transition-all duration-300"
+                  >
+                    <Download size={18} />
+                    <span className="text-sm tracking-wide uppercase font-medium">Download Model</span>
+                  </a>
+                )}
+                {selectedProject.demoUrl && (
+                  <a href={selectedProject.demoUrl} target="_blank" rel="noopener noreferrer"
+                    className="group flex items-center gap-3 bg-transparent border-2 border-off-white text-off-white px-8 py-4 hover:bg-off-white hover:text-charcoal transition-all duration-300"
+                  >
+                    <span className="text-sm tracking-wide uppercase font-medium">Live Demo</span>
+                    <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* Hero Image */}
             <div className="aspect-[16/10] overflow-hidden bg-dark-gray">
@@ -270,83 +416,56 @@ function App() {
               <div className="lg:col-span-2 space-y-12">
                 <div>
                   <h2 className="text-3xl font-bold text-off-white mb-6">The Challenge</h2>
-                  <p className="text-off-white/70 leading-relaxed text-lg">
-                    The existing platform suffered from poor user engagement and conversion rates. Users found the interface confusing and the overall experience fragmented. Our goal was to create a cohesive, intuitive design that would improve user satisfaction and drive business results.
-                  </p>
+                  <p className="text-off-white/70 leading-relaxed text-lg">{selectedProject.challenge}</p>
                 </div>
 
                 <div>
-                  <h2 className="text-3xl font-bold text-off-white mb-6">Design Process</h2>
+                  <h2 className="text-3xl font-bold text-off-white mb-8">Development Process</h2>
                   <div className="space-y-8">
-                    <div>
-                      <h3 className="text-xl font-bold text-off-white mb-3">Research & Discovery</h3>
-                      <p className="text-off-white/70 leading-relaxed">
-                        We conducted extensive user interviews and analyzed existing user behavior to understand pain points and opportunities for improvement.
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-off-white mb-3">Ideation & Wireframing</h3>
-                      <p className="text-off-white/70 leading-relaxed">
-                        Multiple design concepts were explored through rapid prototyping and stakeholder feedback sessions.
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-off-white mb-3">Visual Design</h3>
-                      <p className="text-off-white/70 leading-relaxed">
-                        The final design focused on clarity, consistency, and brand alignment while maintaining accessibility standards.
-                      </p>
-                    </div>
+                    {selectedProject.process.map((item, index) => (
+                      <div key={index} className="flex gap-6">
+                        <div className="flex flex-col items-center">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-dark-gray border border-medium-gray/50 text-off-white font-bold">
+                            {index + 1}
+                          </div>
+                          {index < selectedProject.process.length - 1 && (
+                            <div className="w-px h-full bg-medium-gray/50 my-2"></div>
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-off-white mb-2">{item.step}</h3>
+                          <p className="text-off-white/70 leading-relaxed">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-xl font-bold text-off-white mb-4">Technologies</h3>
-                  <div className="space-y-2">
-                    {['Figma', 'Principle', 'Adobe Creative Suite', 'Miro'].map((tech) => (
-                      <div key={tech} className="text-off-white/70">{tech}</div>
+                  <h3 className="text-xl font-bold text-off-white mb-4">Technologies Used</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag) => (
+                      <span key={tag} className="text-xs uppercase tracking-wide text-off-white/50 bg-off-white/10 px-3 py-1">{tag}</span>
                     ))}
                   </div>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-bold text-off-white mb-4">Results</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-2xl font-bold text-off-white">+40%</div>
-                      <div className="text-off-white/70">User Engagement</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-off-white">+60%</div>
-                      <div className="text-off-white/70">Conversion Rate</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-off-white">+25%</div>
-                      <div className="text-off-white/70">User Satisfaction</div>
-                    </div>
+                  <div className="space-y-6">
+                    {selectedProject.results.map((result, index) => (
+                      <div key={index}>
+                        <div className="text-3xl font-bold text-off-white">{result.metric}</div>
+                        <div className="text-off-white/70 mt-1">{result.value}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Additional Images */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="aspect-[4/3] bg-dark-gray">
-                <img 
-                  src="https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                  alt="Process"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="aspect-[4/3] bg-dark-gray">
-                <img 
-                  src="https://images.pexels.com/photos/3184299/pexels-photo-3184299.jpeg?auto=compress&cs=tinysrgb&w=800" 
-                  alt="Final Design"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
           </div>
         )}
       </div>
@@ -545,13 +664,13 @@ function App() {
             <div>
               <h3 className="text-xl font-bold text-off-white mb-4">Follow Me</h3>
               <div className="flex items-center gap-6">
-                <a href="#" className="text-off-white/60 hover:text-off-white transition-colors">
+                <a href="https://www.linkedin.com/in/arizalfirdausbaguspratama/" target="_blank" rel="noopener noreferrer" className="text-off-white/60 hover:text-off-white transition-colors">
                   <Linkedin size={24} />
                 </a>
-                <a href="#" className="text-off-white/60 hover:text-off-white transition-colors">
-                  <Facebook size={24} />
+                <a href="https://www.instagram.com/arzlfrds/" target="_blank" rel="noopener noreferrer" className="text-off-white/60 hover:text-off-white transition-colors">
+                  <Instagram size={24} />
                 </a>
-                <a href="#" className="text-off-white/60 hover:text-off-white transition-colors">
+                <a href="https://github.com/ArizalMuluk" target="_blank" rel="noopener noreferrer" className="text-off-white/60 hover:text-off-white transition-colors">
                   <Github size={24} />
                 </a>
               </div>
@@ -679,7 +798,7 @@ function App() {
       />
       <Analytics />
       {renderPage()}
-      <Footer />
+      <Footer setCurrentPage={setCurrentPage} />
     </div>
   );
 }

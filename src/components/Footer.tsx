@@ -1,6 +1,10 @@
-import { Linkedin, Facebook, Github, Mail, Phone, MapPin } from 'lucide-react';
+import { Linkedin, Instagram, Github, Mail, Phone, MapPin } from 'lucide-react';
 
-const Footer = () => (
+type FooterProps = {
+  setCurrentPage: (page: string) => void;
+};
+
+const Footer = ({ setCurrentPage }: FooterProps) => (
   <footer className="bg-dark-gray border-t border-medium-gray/20">
     <div className="max-w-7xl mx-auto px-6 py-16">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -12,23 +16,26 @@ const Footer = () => (
           </p>
           <div className="flex items-center gap-4">
             <a 
-              href="#" 
+              href="https://www.linkedin.com/in/arizalfirdausbaguspratama/" 
               className="text-off-white/60 hover:text-off-white transition-colors"
               aria-label="LinkedIn"
+              target="_blank" rel="noopener noreferrer"
             >
               <Linkedin size={20} />
             </a>
             <a 
-              href="#" 
+              href="https://www.instagram.com/arzlfrds/" 
               className="text-off-white/60 hover:text-off-white transition-colors"
-              aria-label="Facebook"
+              aria-label="Instagram"
+              target="_blank" rel="noopener noreferrer"
             >
-              <Facebook size={20} />
+              <Instagram size={20} />
             </a>
             <a 
-              href="#" 
+              href="https://github.com/ArizalMuluk" 
               className="text-off-white/60 hover:text-off-white transition-colors"
               aria-label="GitHub"
+              target="_blank" rel="noopener noreferrer"
             >
               <Github size={20} />
             </a>
@@ -43,6 +50,7 @@ const Footer = () => (
             {['home', 'work', 'about', 'contact'].map((page) => (
               <li key={page}>
                 <button
+                  onClick={() => setCurrentPage(page)}
                   className="text-off-white/70 hover:text-off-white transition-colors capitalize"
                 >
                   {page}
