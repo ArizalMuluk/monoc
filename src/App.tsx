@@ -56,9 +56,9 @@ const projects: Project[] = [
         description: "A Flask-based REST API was developed to serve the trained model, allowing for easy integration with a user-facing application. The API exposes an endpoint to receive user input and return personality predictions."
       }
     ],
-    results: [{ metric: "92.93%", value: "Prediction Accuracy" }, { metric: "535.5 KB", value: "Model Size" }],
+    results: [{ metric: "92.93%", value: "Prediction Accuracy" }, { metric: "536 kB", value: "Model Size" }],
     githubUrl: "https://github.com/ArizalMuluk/personality_behavior",
-    modelUrl: "https://huggingface.co/RijalMuluk/personality_behavior/resolve/main/personality_rf_model.joblib?download=true"
+    modelUrl: "https://huggingface.co/RijalMuluk/personality_behavior/tree/main"
   },
   {
     id: 2,
@@ -85,9 +85,9 @@ const projects: Project[] = [
         description: "The trained PyTorch model was wrapped in a Flask API, creating an endpoint that accepts an image and returns the predicted dish category."
       }
     ],
-    results: [{ metric: "89.45%", value: "Classification Accuracy" }, { metric: "42.7 MB", value: "Model Size" }],
+    results: [{ metric: "89.45%", value: "Classification Accuracy" }, { metric: "44.8 MB", value: "Model Size" }],
     githubUrl: "https://github.com/ArizalMuluk/naspad_classifier",
-    modelUrl: "https://huggingface.co/RijalMuluk/naspad_classifier/resolve/main/nasipad_classifier.pt?download=true"
+    modelUrl: "https://huggingface.co/RijalMuluk/naspad_classifier/tree/main"
   },
   {
     id: 3,
@@ -114,9 +114,9 @@ const projects: Project[] = [
         description: "Developed a simple web interface using Flask that allows users to input flower measurements and receive an instant species prediction from the model."
       }
     ],
-    results: [{ metric: "96.55%", value: "Model Accuracy" }, { metric: "2.5 KB", value: "Model Size" }],
+    results: [{ metric: "96.55%", value: "Model Accuracy" }, { metric: "2.47 kB", value: "Model Size" }],
     githubUrl: "https://github.com/ArizalMuluk/iris_prediction",
-    modelUrl: "https://huggingface.co/RijalMuluk/iris_DTC_model/resolve/main/iris_decision_tree_model.pkl?download=true"
+    modelUrl: "https://huggingface.co/RijalMuluk/iris_DTC_model/tree/main"
   },
   {
     id: 4,
